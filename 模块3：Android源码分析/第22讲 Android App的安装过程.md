@@ -3,7 +3,7 @@
 之前的两节课我们了解了 Android 系统中两个比较重要的系统服务ActivityManagerService（AMS）和 WindowManagerService（WMS），这节课我们通过分析 apk 的安装过程来了解一下 Android 中另一个比较重要的系统服务——PackageManagerService（PMS）。
 
 在分析安装过程之前，需要先了解一下 Android 项目是如何经过编译->打包生成最终的 .apk 格式的安装包。谷歌有一张官方图片来描述 apk 的打包流程，如下图所示。
-
+[![App的安装过程.png](https://z3.ax1x.com/2021/08/24/hkD0B9.png)](https://imgtu.com/i/hkD0B9)
 ## 编译阶段
 
 ####Resources 资源文件 
