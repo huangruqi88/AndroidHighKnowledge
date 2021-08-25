@@ -15,7 +15,9 @@ Java 能够实现"一次编译，到处运行”，这其中 class 文件要占�
 这两者之间的关系可以用下面这张张图来表示：
 
 ![表和无符号数的关系.png](https://z3.ax1x.com/2021/07/30/Wqv2DK.png)
+
 可以看出，在一张表中可以包含其他无符号数和其他表格。伪代码可以如下所示：
+
 	// 无符号数
 	u1 = byte[1];
 	u2 = byte[2];
@@ -227,13 +229,13 @@ tag **09** 表示是字段引用表 CONSTANT_FIeldref_info ，其结构如下：
 **0002** 表示类中声明了 2 个变量（在 class 文件中叫字段），字段计数器之后会紧跟着 2 个字段表的数据结构。
 
 字段表的具体结构如下：
-
+	
 	CONSTANT_Fieldref_info{
-	    u2  access_flags    字段的访问标志
-	    u2  name_index          字段的名称索引(也就是变量名)
-	    u2  descriptor_index    字段的描述索引(也就是变量的类型)
-	    u2  attributes_count    属性计数器
-	    attribute_info
+		u2  access_flags    字段的访问标志
+		u2  name_index          字段的名称索引(也就是变量名)
+		u2  descriptor_index    字段的描述索引(也就是变量的类型)
+		u2  attributes_count    属性计数器
+		attribute_info
 	}
 
 
