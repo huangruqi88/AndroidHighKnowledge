@@ -151,6 +151,7 @@ Java 能够实现"一次编译，到处运行”，这其中 class 文件要占�
 至此，第 1 个常量就解读完毕了。紧接着的就是第 2 个常量，如下所示：
 
 ![常量池5.png](https://z3.ax1x.com/2021/07/30/WLmX6K.png)
+
 tag **09** 表示是字段引用表 CONSTANT_FIeldref_info ，其结构如下：
 
 	CONSTANT_Fieldref_info{
