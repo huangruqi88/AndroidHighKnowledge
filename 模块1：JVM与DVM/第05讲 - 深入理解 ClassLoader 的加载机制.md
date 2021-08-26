@@ -1,4 +1,4 @@
-####Java 中的类何时被加载器加载 
+## Java 中的类何时被加载器加载 
 在 Java 程序启动的时候，并不会一次性加载程序中所有的 .class 文件，而是在程序的运行过程中，动态地加载相应的类到内存中。
 
 通常情况下,Java 程序中的 .class 文件会在以下 2 种情况下被 ClassLoader 主动加载到内存中：
@@ -6,7 +6,7 @@
 1. 调用类构造器
 2. 调用类中的静态（static）变量或者静态方法
 
-####Java 中 ClassLoader
+## Java 中 ClassLoader
 
 JVM 中自带 3 个类加载器：
 1. 启动类加载器 BootstrapClassLoader
@@ -15,7 +15,7 @@ JVM 中自带 3 个类加载器：
 
 以上 3 者在 JVM 中有各自分工，但是又互相有依赖。
 
-####APPClassLoader 系统类加载器
+## APPClassLoader 系统类加载器
 
 部分源码如下：
 
@@ -23,7 +23,7 @@ JVM 中自带 3 个类加载器：
 
 可以看出，AppClassLoader 主要加载系统属性“java.class.path”配置下类文件，也就是环境变量 CLASS_PATH 配置的路径。因此 AppClassLoader 是面向用户的类加载器，我们自己编写的代码以及使用的第三方 jar 包通常都是由它来加载的。
 
-####ExtClassLoader 扩展类加载器
+## ExtClassLoader 扩展类加载器
 
 部分源码如下：
 
@@ -39,7 +39,7 @@ JVM 中自带 3 个类加载器：
 
 **ExtClassLoade 扩展类加载器 主要负责加载Java的扩展类库,默认加载JAVA_HOME/jre/lib/ext/目录下的所有jar包或者由java.ext.dirs系统属性指定的jar包.放入这个目录下的jar包对AppClassLoader加载器都是可见的(因为ExtClassLoader是AppClassLoader的父加载器,并且Java类加载器采用了委托机制)。**
 
-####BootstrapClassLoader 启动类加载器
+## BootstrapClassLoader 启动类加载器
 
 BootstrapClassLoader 同上面的两种 ClassLoader 不太一样。
 
@@ -55,7 +55,7 @@ BootstrapClassLoader 加载系统属性“sun.boot.class.path”配置下类文�
 
 可以看到，这些全是 JRE 目录下的 jar 包或者 .class 文件。
 
-####双亲委派模式（Parents Delegation Model）
+## 双亲委派模式（Parents Delegation Model）
 
 既然 JVM 中已经有了这 3 种 ClassLoader，那么 JVM 又是如何知道该使用哪一个类加载器去加载相应的类呢？答案就是：**双亲委派模式**。
 
@@ -80,7 +80,7 @@ BootstrapClassLoader 加载系统属性“sun.boot.class.path”配置下类文�
 
 [![双亲委派模式2.png](https://z3.ax1x.com/2021/08/01/WzG226.png)](https://imgtu.com/i/WzG226)
 
-####举例说明
+## 举例说明
 
 比如执行以下代码：
 
@@ -105,11 +105,11 @@ BootstrapClassLoader 加载系统属性“sun.boot.class.path”配置下类文�
 
 **注意：**“双亲委派”机制只是 Java 推荐的机制，并不是强制的机制。我们可以继承 java.lang.ClassLoader 类，实现自己的类加载器。如果想保持双亲委派模型，就应该重写 findClass(name) 方法；如果想破坏双亲委派模型，可以重写 loadClass(name) 方法。
 
-####自定义 ClassLoader
+## 自定义 ClassLoader
 
 JVM 中预置的 3 种 ClassLoader 只能加载特定目录下的 .class 文件，如果我们想加载其他特殊位置下的 jar 包或类时（比如，我要加载网络或者磁盘上的一个 .class 文件），默认的 ClassLoader 就不能满足我们的需求了，所以需要定义自己的 Classloader 来加载特定目录下的 .class 文件。
 
-####自定义 ClassLoader 步骤
+## 自定义 ClassLoader 步骤
 1. 自定义一个类继承抽象类 ClassLoader。
 2. 重写 findClass 方法。
 3. 在 findClass 中，调用 defineClass 方法将字节码转换成 Class 对象，并返回。
@@ -118,7 +118,7 @@ JVM 中预置的 3 种 ClassLoader 只能加载特定目录下的 .class 文件�
 
 [![自定义 ClassLoader 步骤.png](https://z3.ax1x.com/2021/08/01/WzYC0e.png)](https://imgtu.com/i/WzYC0e)
 
-####自定义 ClassLoader 实践
+## 自定义 ClassLoader 实践
 
 首先在本地电脑上创建一个测试类 Secret.java，代码如下：
 
@@ -149,13 +149,13 @@ JVM 中预置的 3 种 ClassLoader 只能加载特定目录下的 .class 文件�
 
 **注意：**上述动态加载 .class 文件的思路，经常被用作热修复和插件化开发的框架中，包括 QQ 空间热修复方案、微信 Tink 等原理都是由此而来。客户端只要从服务端下载一个加密的 .class 文件，然后在本地通过事先定义好的加密方式进行解密，最后再使用自定义 ClassLoader 动态加载解密后的 .class 文件，并动态调用相应的方法。
 
-####Android 中的 ClassLoader
+## Android 中的 ClassLoader
 
 本质上，Android 和传统的 JVM 是一样的，也需要通过 ClassLoader 将目标类加载到内存，类加载器之间也符合双亲委派模型。但是在 Android 中， ClassLoader 的加载细节有略微的差别。
 
 在 Android 虚拟机里是无法直接运行 .class 文件的，Android 会将所有的 .class 文件转换成一个 .dex 文件，并且 Android 将加载 .dex 文件的实现封装在 BaseDexClassLoader 中，而我们一般只使用它的两个子类：PathClassLoader 和 DexClassLoader。
 
-#### PathClassLoader
+## PathClassLoader
 
 PathClassLoader 用来加载系统 apk 和被安装到手机中的 apk 内的 dex 文件。它的 2 个构造函数如下：
 
@@ -176,7 +176,7 @@ PathClassLoader 里面除了这 2 个构造方法以外就没有其他的代码�
 
 [![PathClassLoader_3.png](https://z3.ax1x.com/2021/08/01/WzU3hd.png)](https://imgtu.com/i/WzU3hd)
 
-#### DexClassLoader
+## DexClassLoader
 
 先来看官方对 DexClassLoader 的描述：
 
@@ -195,11 +195,11 @@ DexClassLoader 的源码里面只有一个构造方法，代码如下：
 + **dexPath：**包含 class.dex 的 apk、jar 文件路径 ，多个路径用文件分隔符（默认是“:”）分隔。
 + **optimizedDirectory：**用来缓存优化的 dex 文件的路径，即从 apk 或 jar 文件中提取出来的 dex 文件。该路径不可以为空，且应该是应用私有的，有读写权限的路径。
 
-#### 使用 DexClassLoader 实现热修复
+## 使用 DexClassLoader 实现热修复
 
 理论知识都是为实践作基础，接下来我们就使用 DexClassLoader 来模拟热修复功能的实现。
 
-##### 创建 Android 项目 DexClassLoaderHotFix
+### 创建 Android 项目 DexClassLoaderHotFix
 
 项目结构如下：
 
@@ -221,7 +221,7 @@ SayException.java 实现了 ISay 接口，但是在 saySomething 方法中，打
 
 [![DexClassLoader_5.png](https://z3.ax1x.com/2021/08/01/WzaLzn.png)](https://imgtu.com/i/WzaLzn)
 
-##### 创建 HotFix patch 包
+### 创建 HotFix patch 包
 
 新建 Java 项目，并分别创建两个文件 ISay.java 和 SayHotFix.java。
 
@@ -251,15 +251,9 @@ ISay 接口的包名和类名必须和 Android 项目中保持一致。SayHotFix
 
 [![创建 HotFix patch 包04.png](https://z3.ax1x.com/2021/08/01/WzdRkF.png)](https://imgtu.com/i/WzdRkF)
 
-#### 总结
+## 总结
 
 + **ClassLoader 就是用来加载 class 文件的，不管是 jar 中还是 dex 中的 class。**
 + **Java 中的 ClassLoader 通过双亲委托来加载各自指定路径下的 class 文件。**
 + **可以自定义 ClassLoader，一般覆盖 findClass() 方法，不建议重写 loadClass 方法。**
 + **Android 中常用的两种 ClassLoader 分别为：PathClassLoader 和 DexClassLoader。**
-
-
-
-
-
-
