@@ -30,7 +30,7 @@ instanceOopDesc 的基类为 oopDesc 类。它的结构如下：
 
 [![对象头03.png](https://z3.ax1x.com/2021/08/03/fitE24.png)](https://imgtu.com/i/fitE24)
 
-从图中可以看出，根据"锁标志位”以及"是否为偏向锁"，Java 中的锁可以分为以下几种状态：
+从图中可以看出，根据“锁标志位”以及“是否为偏向锁”，Java 中的锁可以分为以下几种状态：
 
 [![对象头04.png](https://z3.ax1x.com/2021/08/03/fit3GD.png)](https://imgtu.com/i/fit3GD)
 
