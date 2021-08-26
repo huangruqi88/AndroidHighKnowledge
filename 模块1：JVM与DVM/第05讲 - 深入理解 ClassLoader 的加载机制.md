@@ -101,7 +101,7 @@ BootstrapClassLoader 加载系统属性“sun.boot.class.path”配置下类文�
 
 可以看出，Test 的 ClassLoader 为 AppClassLoader 类型，而 AppClassLoader 的 parent 为 ExtClassLoader 类型。ExtClassLoader 的 parent 为 null。
 
-**注意：**“双亲委派”机制只是 Java 推荐的机制，并不是强制的机制。我们可以继承 java.lang.ClassLoader 类，实现自己的类加载器。如果想保持双亲委派模型，就应该重写 findClass(name) 方法；如果想破坏双亲委派模型，可以重写 loadClass(name) 方法。
+**注意**：“双亲委派”机制只是 Java 推荐的机制，并不是强制的机制。我们可以继承 java.lang.ClassLoader 类，实现自己的类加载器。如果想保持双亲委派模型，就应该重写 findClass(name) 方法；如果想破坏双亲委派模型，可以重写 loadClass(name) 方法。
 
 ## 自定义 ClassLoader
 
@@ -145,7 +145,7 @@ JVM 中预置的 3 种 ClassLoader 只能加载特定目录下的 .class 文件�
 
 [![自定义 ClassLoader 实践5.png](https://z3.ax1x.com/2021/08/01/WztvqO.png)](https://imgtu.com/i/WztvqO)
 
-**注意：**上述动态加载 .class 文件的思路，经常被用作热修复和插件化开发的框架中，包括 QQ 空间热修复方案、微信 Tink 等原理都是由此而来。客户端只要从服务端下载一个加密的 .class 文件，然后在本地通过事先定义好的加密方式进行解密，最后再使用自定义 ClassLoader 动态加载解密后的 .class 文件，并动态调用相应的方法。
+**注意**：上述动态加载 .class 文件的思路，经常被用作热修复和插件化开发的框架中，包括 QQ 空间热修复方案、微信 Tink 等原理都是由此而来。客户端只要从服务端下载一个加密的 .class 文件，然后在本地通过事先定义好的加密方式进行解密，最后再使用自定义 ClassLoader 动态加载解密后的 .class 文件，并动态调用相应的方法。
 
 ## Android 中的 ClassLoader
 
@@ -190,8 +190,8 @@ DexClassLoader 的源码里面只有一个构造方法，代码如下：
 
 参数说明：
 
-+ **dexPath：**包含 class.dex 的 apk、jar 文件路径 ，多个路径用文件分隔符（默认是“:”）分隔。
-+ **optimizedDirectory：**用来缓存优化的 dex 文件的路径，即从 apk 或 jar 文件中提取出来的 dex 文件。该路径不可以为空，且应该是应用私有的，有读写权限的路径。
++ **dexPath**：包含 class.dex 的 apk、jar 文件路径 ，多个路径用文件分隔符（默认是“:”）分隔。
++ **optimizedDirectory**：用来缓存优化的 dex 文件的路径，即从 apk 或 jar 文件中提取出来的 dex 文件。该路径不可以为空，且应该是应用私有的，有读写权限的路径。
 
 ## 使用 DexClassLoader 实现热修复
 
@@ -243,7 +243,7 @@ ISay 接口的包名和类名必须和 Android 项目中保持一致。SayHotFix
 
 [![创建 HotFix patch 包03.png](https://z3.ax1x.com/2021/08/01/Wzd6mV.png)](https://imgtu.com/i/Wzd6mV)
 
-**注意：**因为需要访问 SD 卡中的文件，所以需要在 AndroidManifest.xml 中申请权限
+**注意**：因为需要访问 SD 卡中的文件，所以需要在 AndroidManifest.xml 中申请权限
 
 最后运行效果如下：
 
