@@ -27,7 +27,7 @@ JVM 中自带 3 个类加载器：
 
 部分源码如下：
 
-[![ExtClassLoade 扩展类加载器.png](https://z3.ax1x.com/2021/08/01/Wz1iuQ.png)](https://imgtu.com/i/Wz1iuQ)
+[![ExtClassLoader 扩展类加载器.png](https://z3.ax1x.com/2021/08/01/Wz1iuQ.png)](https://imgtu.com/i/Wz1iuQ)
 
 可以看出，ExtClassLoader 加载系统属性“java.ext.dirs”配置下类文件，可以打印出这个属性来查看具体有哪些文件：
 
