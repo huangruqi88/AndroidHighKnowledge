@@ -31,13 +31,13 @@ JVM 中自带 3 个类加载器：
 
 可以看出，ExtClassLoader 加载系统属性“java.ext.dirs”配置下类文件，可以打印出这个属性来查看具体有哪些文件：
 
-[![ExtClassLoade 扩展类加载器02.png](https://z3.ax1x.com/2021/08/01/Wz1mCV.png)](https://imgtu.com/i/Wz1mCV)
+[![ExtClassLoader 扩展类加载器02.png](https://z3.ax1x.com/2021/08/01/Wz1mCV.png)](https://imgtu.com/i/Wz1mCV)
 
 结果如下：
 
-[![ExtClassLoade 扩展类加载器03.png](https://z3.ax1x.com/2021/08/01/Wz1vqJ.png)](https://imgtu.com/i/Wz1vqJ)
+[![ExtClassLoader 扩展类加载器03.png](https://z3.ax1x.com/2021/08/01/Wz1vqJ.png)](https://imgtu.com/i/Wz1vqJ)
 
-**ExtClassLoade 扩展类加载器 主要负责加载Java的扩展类库,默认加载JAVA_HOME/jre/lib/ext/目录下的所有jar包或者由java.ext.dirs系统属性指定的jar包.放入这个目录下的jar包对AppClassLoader加载器都是可见的(因为ExtClassLoader是AppClassLoader的父加载器,并且Java类加载器采用了委托机制)。**
+**ExtClassLoader 扩展类加载器 主要负责加载Java的扩展类库,默认加载JAVA_HOME/jre/lib/ext/目录下的所有jar包或者由java.ext.dirs系统属性指定的jar包.放入这个目录下的jar包对AppClassLoader加载器都是可见的(因为ExtClassLoader是AppClassLoader的父加载器,并且Java类加载器采用了委托机制)。**
 
 ## BootstrapClassLoader 启动类加载器
 
