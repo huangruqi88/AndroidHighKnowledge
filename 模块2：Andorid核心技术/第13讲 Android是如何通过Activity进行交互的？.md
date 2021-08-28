@@ -63,8 +63,6 @@ allowTaskReparenting 赋予 Activity 在各个 Task 中间转移的特性。一�
 
 可以看出，FirstC 被移动到与 ReparentActivity 处在一个任务栈中。此时 FirstC 位于栈顶位置，再次点击返回键，才会显示 ReparentActivity 页面。
 
-##通过 Binder 传递数据的限制
-
 ### Binder 传递数据限制
 
 Activity 界面跳转时，使用 Intent 传递数据是最常用的操作了。但是 Intent 传值偶尔也会导程序崩溃，比如以下代码：
