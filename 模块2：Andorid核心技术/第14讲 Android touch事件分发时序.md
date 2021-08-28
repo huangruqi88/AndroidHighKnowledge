@@ -117,3 +117,56 @@ mFirstTouchTarget 的部分源码如下：
 [![mFirstTouchTarget_01.png](https://z3.ax1x.com/2021/08/08/flmrrD.png)](https://imgtu.com/i/flmrrD)
 
 可以看出其实 mFirstTouchTarget 是一个 TouchTarget 类型的**链表**结构。而这个 TouchTarget 的作用就是用来记录捕获了 DOWN 事件的 View，具体保存在上图中的 child 变量。可是为什么是链表类型的结构呢？因为 Android 设备是支持多指操作的，每一个手指的 DOWN 事件都可以当做一个 TouchTarget 保存起来。在步骤 3 中判断如果 mFirstTouchTarget 不为 null，则再次将事件分发给相应的 TouchTarget。
+
+#### 容易被遗漏的 CANCEL 事件
+
+在上面的步骤 3 中，继续向子 View 分发事件的代码中，有一段比较有趣的逻辑：
+
+[![CANCEL 事件01.png](https://z3.ax1x.com/2021/08/08/flnPo9.png)](https://imgtu.com/i/flnPo9)
+
+上图红框中表明已经有子 View 捕获了 touch 事件，但是蓝色框中的 intercepted boolean 变量又是 true。这种情况下，事件主导权会重新回到父视图 ViewGroup 中，并传递给子 View 的分发事件中传入一个 cancelChild == true。
+
+看一下 dispatchTransformedTouchEvent 方法的部分源码如下：
+
+[![CANCEL 事件02.png](https://z3.ax1x.com/2021/08/08/flnkJ1.png)](https://imgtu.com/i/flnkJ1)
+
+因为之前传入参数 cancel 为 true，并且 child 不为 null，**最终这个事件会被包装为一个 ACTION_CANCEL 事件传给 child**。
+
+什么情况下会触发这段逻辑呢？
+
+**总结一下就是：当父视图的 onInterceptTouchEvent 先返回 false，然后在子 View 的 dispatchTouchEvent 中返回 true（表示子 View 捕获事件），关键步骤就是在接下来的 MOVE 的过程中，父视图的 onInterceptTouchEvent 又返回 true，intercepted 被重新置为 true，此时上述逻辑就会被触发，子控件就会收到 ACTION_CANCEL 的 touch 事件。**
+
+***实际上有个很经典的例子可以用来演示这种情况***：
+当在 Scrollview 中添加自定义 View 时，ScrollView 默认在 DOWN 事件中并不会进行拦截，事件会被传递给 ScrollView 内的子控件。只有当手指进行滑动并到达一定的距离之后，onInterceptTouchEvent 方法返回 true，并触发 ScrollView 的滚动效果。当 ScrollView 进行滚动的瞬间，内部的子 View 会接收到一个 CANCEL 事件，并丢失touch焦点。
+
+比如以下代码：
+
+[![Scrollview 01.png](https://z3.ax1x.com/2021/08/08/fluQnU.png)](https://imgtu.com/i/fluQnU)
+
+CaptureTouchView 是一个自定义的 View，其源码如下：
+
+[![Scrollview 02.png](https://z3.ax1x.com/2021/08/08/fluajK.png)](https://imgtu.com/i/fluajK)
+
+CaptureTouchView 的 onTouchEvent 返回 true，表示它会将接收到的 touch 事件进行捕获消费。
+
+上述代码执行后，当手指点击屏幕时 DOWN 事件会被传递给 CaptureTouchView，手指滑动屏幕将 ScrollView 上下滚动，刚开始 MOVE 事件还是由 CaptureTouchView 来消费处理，但是当 ScrollView 开始滚动时，CaptureTouchView 会接收一个 CANCEL 事件，并不再接收后续的 touch 事件。具体打印 log 如下：
+
+[![Scrollview 03.png](https://z3.ax1x.com/2021/08/08/flug3t.png)](https://imgtu.com/i/flug3t)
+
+***因此，我们平时自定义View时，尤其是有可能被ScrollView或者ViewPager嵌套使用的控件，不要遗漏对CANCEL事件的处理，否则有可能引起UI显示异常。***
+
+## 总结：
+
+本课时重点分析了 dispatchTouchEvent 的事件的流程机制，这一过程主要分 3 部分：
+
++ 判断是否需要拦截 —> 主要是根据 onInterceptTouchEvent 方法的返回值来决定是否拦截；
+
++ 在 DOWN 事件中将 touch 事件分发给子 View —> 这一过程如果有子 View 捕获消费了 touch 事件，会对 mFirstTouchTarget 进行赋值；
+
++ 最后一步，DOWN、MOVE、UP 事件都会根据 mFirstTouchTarget 是否为 null，决定是自己处理 touch 事件，还是再次分发给子 View。
+
+然后介绍了整个事件分发中的几个特殊的点。
+
++ DOWN 事件的特殊之处：事件的起点；决定后续事件由谁来消费处理；
++ mFirstTouchTarget 的作用：记录捕获消费 touch 事件的 View，是一个链表结构；
++ CANCEL 事件的触发场景：当父视图先不拦截，然后在 MOVE 事件中重新拦截，此时子 View 会接收到一个 CANCEL 事件。
