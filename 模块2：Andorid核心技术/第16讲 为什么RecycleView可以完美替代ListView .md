@@ -24,7 +24,7 @@ RV 常规使用方式如下：
 
 RV 的 onMeasure 方法如下：
 
-[![onMeasure_01.png](https://z3.ax1x.com/2021/08/11/faJVbT.png)](https://imgtu.com/i/faJVbT)
+[![onMeasure_01.png](https://z3.ax1x.com/2021/08/28/h3G4Q1.png)](https://imgtu.com/i/h3G4Q1)
 
 + **图中 1 处，表示在 XML 布局文件中，RV 的宽高被设置为 match_parent 或者具体值，那么直接将 skipMeasure 置为 true，并调用 mLayout（传入的 LayoutManager）的 onMeasure 方法测量自身的宽高即可。**
 
