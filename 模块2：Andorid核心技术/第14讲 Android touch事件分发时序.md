@@ -64,7 +64,7 @@ View 是一个单纯的控件，不能再被细分，内部也并不会存在子
 
 如果在上面步骤 1 中，当前 ViewGroup 并没有对事件进行拦截，则执行步骤 2。
 
-####步骤 2 具体代码如下
+#### 步骤 2 具体代码如下
 
 [![步骤 2.png](https://z3.ax1x.com/2021/08/08/flEb38.png)](https://imgtu.com/i/flEb38)
 
@@ -78,7 +78,7 @@ View 是一个单纯的控件，不能再被细分，内部也并不会存在子
 
 + 图中 ④ 处调用 dispatchTransformedTouchEvent 方法将事件分发给子 View，如果子 View 捕获事件成功，则将 mFirstTouchTarget 赋值给子 View。
 
-####步骤 3 具体代码如下
+#### 步骤 3 具体代码如下
 
 [![步骤 3.png](https://z3.ax1x.com/2021/08/08/flV6Vs.png)](https://imgtu.com/i/flV6Vs)
 
@@ -88,7 +88,7 @@ View 是一个单纯的控件，不能再被细分，内部也并不会存在子
 
 + 分支 2：mFirstTouchTarget 不为 null，说明在上面步骤 2 中有子 View 对 touch 事件进行了捕获，则直接将当前以及后续的事件交给 mFirstTouchTarget 指向的 View 进行处理。
 
-####事件分发流程代码演示
+#### 事件分发流程代码演示
 
 定义如下布局文件：
 
@@ -104,213 +104,16 @@ DownInterceptedGroup 和 CaptureTouchView 是两个自定义 View，它们的源
 
 上图中在 DOWN 事件中，DownInterceptGroup 的 onInterceptTouchEvent 被触发一次；然后在子 View CaptureTouchView 的 dispatchTouchEvent 中返回 true，代表它捕获消费了这个 DOWN 事件。这种情况下 CaptureTouchView 会被添加到父视图（DownInterceptGroup）中的 mFirstTouchTarget 中。因此后续的 MOVE 和 UP 事件都会经过 DownInterceptGroup 的 onInterceptTouchEvent 进行拦截判断。 详细源码可以参考：[CaptureTouchView.java](https://github.com/McoyJiang/LagouAndroidShare/blob/master/course14_%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91/LagouTouchExplanation/app/src/main/java/material/danny_jiang/com/lagoutouchexplanation/views/CaptureTouchView.java)
 
-####为什么 DOWN 事件特殊
+#### 为什么 DOWN 事件特殊
 
 所有 touch 事件都是从 DOWN 事件开始的，这是 DOWN 事件比较特殊的原因之一。另一个原因是 DOWN 事件的处理结果会直接影响后续 MOVE、UP 事件的逻辑。
 
 在步骤 2 中，只有 DOWN 事件会传递给子 View 进行捕获判断，一旦子 View 捕获成功，后续的 MOVE 和 UP 事件是通过遍历 mFirstTouchTarget 链表，查找之前接受 ACTION_DOWN 的子 View，并将触摸事件分配给这些子 View。也就是说后续的 **MOVE、UP 等事件的分发交给谁，取决于它们的起始事件 Down 是由谁捕获的。**
 
-####mFirstTouchTarget 有什么作用
+#### mFirstTouchTarget 有什么作用
 
 mFirstTouchTarget 的部分源码如下：
 
 [![mFirstTouchTarget_01.png](https://z3.ax1x.com/2021/08/08/flmrrD.png)](https://imgtu.com/i/flmrrD)
 
 可以看出其实 mFirstTouchTarget 是一个 TouchTarget 类型的**链表**结构。而这个 TouchTarget 的作用就是用来记录捕获了 DOWN 事件的 View，具体保存在上图中的 child 变量。可是为什么是链表类型的结构呢？因为 Android 设备是支持多指操作的，每一个手指的 DOWN 事件都可以当做一个 TouchTarget 保存起来。在步骤 3 中判断如果 mFirstTouchTarget 不为 null，则再次将事件分发给相应的 TouchTarget。
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
