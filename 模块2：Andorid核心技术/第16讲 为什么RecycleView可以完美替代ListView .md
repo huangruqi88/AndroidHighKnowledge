@@ -67,6 +67,7 @@ layoutChunk 是一个非常核心的方法，这个方法执行一次就填充�
 [![onLayout_05.png](https://z3.ax1x.com/2021/08/11/faNi2d.png)](https://imgtu.com/i/faNi2d)
 
 说明：
+
 + **图中 1 处从缓存（Recycler）中取出子 ItemView，然后调用 addView 或者 addDisappearingView 将子 ItemView 添加到 RV 中。**
 + **图中 2 处测量被添加的 RV 中的子 ItemView 的宽高。**
 + **图中 3 处根据所设置的 Decoration、Margins 等所有选项确定子 ItemView 的显示位置。**
@@ -83,7 +84,7 @@ layoutChunk 是一个非常核心的方法，这个方法执行一次就填充�
 
 [![onDraw_02.png](https://z3.ax1x.com/2021/08/11/faUVSJ.png)](https://imgtu.com/i/faUVSJ)
 
-###缓存复用原理 Recycler
+### 缓存复用原理 Recycler
 
 缓存复用是 RV 中另一个非常重要的机制，这套机制主要实现了 ViewHolder 的缓存以及复用。
 
@@ -95,7 +96,7 @@ Recycler 的缓存机制就是通过上图中的这些数据容器来实现的�
 
 [![Recycler_02.png](https://z3.ax1x.com/2021/08/11/faa9cd.png)](https://imgtu.com/i/faa9cd)
 
-###各级缓存功能
+### 各级缓存功能
 
 RV 之所以要将缓存分成这么多块，是为了在功能上进行一些区分，并分别对应不同的使用场景。
 
@@ -123,7 +124,7 @@ RV 之所以要将缓存分成这么多块，是为了在功能上进行一些�
 
 开发人员可以通过继承 ViewCacheExtension，并复写抽象方法 getViewForPositionAndType 来实现自己的缓存机制。只是一般情况下我们不会自己实现也不建议自己去添加缓存逻辑，因为这个类的使用门槛较高，需要开发人员对 RV 的源码非常熟悉。
 
-#####d 第四级缓存 RecycledViewPool
+##### d 第四级缓存 RecycledViewPool
 
 RecycledViewPool 同样是用来缓存屏幕外的 ViewHolder，当 mCachedViews 中的个数已满（默认为 2），则从 mCachedViews 中淘汰出来的 ViewHolder 会先缓存到 RecycledViewPool 中。ViewHolder 在被缓存到 RecycledViewPool 时，会将内部的数据清理，因此从 RecycledViewPool 中取出来的 ViewHolder 需要重新调用 onBindViewHolder 绑定数据。这就同最早的 ListView 中的使用 ViewHolder 复用 convertView 的道理是一致的，因此 RV 也算是将 ListView 的优点完美的继承过来。
 
@@ -131,9 +132,9 @@ RecycledViewPool 还有一个重要功能，官方对其有如下解释：
 
 	RecycledViewPool lets you share Views between multiple RecyclerViews.
 
-可以看出，多个 RV 之间可以共享一个 RecycledViewPool，这对于多 tab 界面的优化效果会很显著。**需要注意的是，RecycledViewPool 是根据 type 来获取 ViewHolder，每个 type 默认最大缓存 5 个。**因此多个 RecyclerView 共享 RecycledViewPool 时，必须确保共享的 RecyclerView 使用的 Adapter 是同一个，或 view type 是不会冲突的。
+可以看出，多个 RV 之间可以共享一个 RecycledViewPool，这对于多 tab 界面的优化效果会很显著。**需要注意的是，RecycledViewPool 是根据 type 来获取 ViewHolder，每个 type 默认最大缓存 5 个**。因此多个 RecyclerView 共享 RecycledViewPool 时，必须确保共享的 RecyclerView 使用的 Adapter 是同一个，或 view type 是不会冲突的。
 
-###RV 是如何从缓存中获取 ViewHolder 的
+### RV 是如何从缓存中获取 ViewHolder 的
 
 在上文介绍 onLayout 阶段时，有介绍在 layoutChunk 方法中通过调用 layoutState.next 方法拿到某个子 ItemView，然后添加到 RV 中。
 
@@ -185,144 +186,3 @@ RecycledViewPool 还有一个重要功能，官方对其有如下解释：
 + **RecyclerView 的缓存复用机制，主要是通过内部类 Recycler 来实现。**
 
 谷歌 Android 团队对 RecyclerView 做了很多优化，导致 RecyclerView 最终的代码极其庞大。这也是为什么当 RecyclerView 出现问题的时候，排查问题的复杂度相对较高。理解 RecyclerView 的源码实现，有助于我们快速定位问题原因、拓展 RecyclerView 功能、提高分析 RecyclerView 性能问题的能力。
-
- 
-第16讲：为什么 RecyclerView 可以完美替代 Listview？
-00:00 Android 工程师进阶 34 讲
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
