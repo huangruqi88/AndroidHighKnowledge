@@ -89,7 +89,7 @@ OkHttp 提供了一个默认的缓存类 Cache.java，我们可以在构建 OkHt
 
 DiskLruCache 最终会以 journal 类型文件将需要缓存的数据保存在本地。如果感觉 OkHttp 自带的这套缓存策略太过复杂，我们可以设置使用 DiskLruCache 自己实现缓存机制。
 
-##CallServerInterceptor 详解
+## CallServerInterceptor 详解
 
 CallServerInterceptor 是 OkHttp 中最后一个拦截器，也是 OkHttp 中最核心的网路请求部分，其 intercept 方法如下：
 
@@ -97,7 +97,7 @@ CallServerInterceptor 是 OkHttp 中最后一个拦截器，也是 OkHttp 中最
 
 如上图所示，主要分为 2 部分。蓝线以上的操作是向服务器端发送请求数据，蓝线以下代表从服务端获取相应数据并构建 Response 对象。
 
-##OkHttp 使用扩展
+## OkHttp 使用扩展
 
 仔细看刚才 CallServerInterceptor 中的 intercept 方法，可以发现在向服务端发送数据以及获取数据都是使用一个 Okio 的框架来实现的。Okio 是 Square 公司打造的另外一个轻量级 IO 库，它是 OkHttp 框架的基石。
 
