@@ -18,13 +18,13 @@ Bitmap 用来描述一张图片的长、宽、颜色等信息。通常情况下�
 
 	I/Bitmap  ( 5673): bitmap size is 1440000
 
-####解释
+#### 解释
 
 默认情况下 BitmapFactory 使用 Bitmap.Config.ARGB_8888 的存储方式来加载图片内容，而在这种存储模式下，每一个像素需要占用 4 个字节。因此上面图片 rodman 的内存大小可以使用如下公式来计算：
 
 	宽 * 高 * 4 = 600 * 600 * 4 = 1440000
 
-####屏幕自适应
+#### 屏幕自适应
 
 但是如果我们在保证代码不修改的前提下，将图片 rodman 移动到（注意是移动，不是拷贝）res/drawable-hdpi 目录下，重新运行代码，则打印日志如下：
 
@@ -46,7 +46,7 @@ Bitmap 用来描述一张图片的长、宽、颜色等信息。通常情况下�
 
 	rodman 实际占用内存大小 = 600 * (320 / 240) * 600 * (320 / 240) * 4 = 2560000
 
-####assets 中的图片大小
+#### assets 中的图片大小
 
 我们知道，Android 中的图片不仅可以保存在 drawable 目录中，还可以保存在 assets 目录下，然后通过 AssetManager 获取图片的输入流。那这种方式加载生成的 Bitmap 是多大呢？同样是上面的 rodman.png，这次将它放到 assets 目录中，使用如下代码加载：
 
@@ -58,11 +58,11 @@ Bitmap 用来描述一张图片的长、宽、颜色等信息。通常情况下�
 
 可以看出，加载 assets 目录中的图片，系统并不会对其进行缩放操作。
 
-####Bitmap 加载优化
+#### Bitmap 加载优化
 
 上面的例子也能看出，一张 65Kb 大小的图片被加载到内存后，竟然占用了 2560000 个字节，也就是 2.5M 左右。因此适当时候，我们需要对需要加载的图片进行缩略优化。
 
-######修改图片加载的 Config
+###### 修改图片加载的 Config
 
 修改占用空间少的存储方式可以快速有效降低图片占用内存。比如通过 BitmapFactory.Options 的 inPreferredConfig 选项，将存储方式设置为 Bitmap.Config.RGB_565。这种存储方式一个像素占用 2 个字节，所以最终占用内存直接减半。如下：
 
@@ -80,9 +80,9 @@ Bitmap 用来描述一张图片的长、宽、颜色等信息。通常情况下�
 
 	I/Bitmap  ( 6414): bitmap size is 180000   // 170Kb
 
-##Bitmap 复用
+## Bitmap 复用
 
-####场景描述
+#### 场景描述
 
 如果在 Android 某个页面创建很多个 Bitmap，比如有两张图片 A 和 B，通过点击某一按钮需要在 ImageView 上切换显示这两张图片，实现效果如下所示：
 
@@ -96,13 +96,14 @@ Bitmap 用来描述一张图片的长、宽、颜色等信息。通常情况下�
 
 [![场景描述03.png](https://z3.ax1x.com/2021/08/14/fy7t1I.png)](https://imgtu.com/i/fy7t1I)
 
-####使用 Options.inBitmap 优化
+#### 使用 Options.inBitmap 优化
 
 实际上经过第一次显示之后，内存中已经存在了一个 Bitmap 对象。每次切换图片只是显示的内容不一样，我们可以重复利用已经占用内存的 Bitmap 空间，具体做法就是使用 Options.inBitmap 参数。将 getBitmap 方法修改如下：
 
 [![Options.inBitmap 优化01.png](https://z3.ax1x.com/2021/08/14/fy7gcq.png)](https://imgtu.com/i/fy7gcq)
 
 解释说明：
+
 + **图中 1 处创建一个可以用来复用的 Bitmap 对象。**
 
 + **图中 2 处，将 options.inBitmap 赋值为之前创建的 reuseBitmap 对象，从而避免重新分配内存。**
@@ -111,7 +112,7 @@ Bitmap 用来描述一张图片的长、宽、颜色等信息。通常情况下�
 
 [![Options.inBitmap 优化02.png](https://z3.ax1x.com/2021/08/14/fy7H3R.png)](https://imgtu.com/i/fy7H3R)
 
-**注意：**在上述 getBitmap 方法中，复用 inBitmap 之前，需要调用 canUseForInBitmap 方法来判断 reuseBitmap 是否可以被复用。这是因为 Bitmap 的复用有一定的限制：
+**注意**：在上述 getBitmap 方法中，复用 inBitmap 之前，需要调用 canUseForInBitmap 方法来判断 reuseBitmap 是否可以被复用。这是因为 Bitmap 的复用有一定的限制：
 
 + 在 Android 4.4 版本之前，只能重用相同大小的 Bitmap 内存区域；
 
@@ -127,7 +128,7 @@ canUserForInBitmap 方法具体如下：
 
 完整的代码可以查看：[拉勾 AndroidBitmap](https://github.com/McoyJiang/LagouAndroidShare/tree/master/course18_Bitmap/LagouBitmap)
 
-##BitmapRegionDecoder 图片分片显示
+## BitmapRegionDecoder 图片分片显示
 
 有时候我们想要加载显示的图片很大或者很长，比如手机滚动截图功能生成的图片。
 
@@ -137,7 +138,7 @@ canUserForInBitmap 方法具体如下：
 
 [![BitmapRegionDecoder 图片分片显示.jpg](https://z3.ax1x.com/2021/08/14/fyHUPJ.jpg)](https://imgtu.com/i/fyHUPJ)
 
-####BitmapRegionDecoder 基本使用
+#### BitmapRegionDecoder 基本使用
 
 首先需要使用 BitmapRegionDecoder 将图片加载到内存中，图片可以以绝对路径、文件描述符、输入流的方式传递给 BitmapRegionDecoder，如下所示：
 
@@ -149,7 +150,7 @@ canUserForInBitmap 方法具体如下：
 
 在此基础上，我们可以通过自定义View，添加 touch 事件来动态地设置 Bitmap 需要显示的区域 Rect。具体实现网上已经有很多成熟的轮子可以直接使用，比如[ LargeImageView](https://github.com/LuckyJayce/LargeImage/blob/master/library/src/main/java/com/shizhefei/view/largeimage/LargeImageView.java) 。张鸿洋先生也有一篇比较详细文章对此介绍：[Android 高清加载巨图方案](https://blog.csdn.net/lmj623565791/article/details/49300989)。
 
-##Bitmap 缓存
+## Bitmap 缓存
 
 当需要在界面上同时展示一大堆图片的时候，比如 ListView、RecyclerView 等，由于用户不断地上下滑动，某个 Bitmap 可能会被短时间内加载并销毁多次。这种情况下通过使用适当的缓存，可以有效地减缓 GC 频率保证图片加载效率，提高界面的响应速度和流畅性。
 
@@ -162,7 +163,7 @@ canUserForInBitmap 方法具体如下：
 + **图中 1 处指定 LruCache 的最大空间为 20M，当超过 20M 时，LruCache 会根据内部缓存策略将多余 Bitmap 移除。**
 + **图中 2 处指定了插入 Bitmap 时的大小，当我们向 LruCache 中插入数据时，LruCache 并不知道每一个对象会占用大多内存，因此需要我们手动指定，并且根据缓存数据的类型不同也会有不同的计算方式。**
 
-##总结：
+## 总结：
 
 这节课详细介绍了 Bitmap 开发中的几个常见问题：
 
@@ -170,106 +171,3 @@ canUserForInBitmap 方法具体如下：
 2. **通过 Options.inBitmap 可以实现 Bitmap 的复用，但是有一定的限制。**
 3. **当界面需要展示多张图片，尤其是在列表视图中，可以考虑使用 Bitmap 缓存。**
 4. **如果需要展示的图片过大，可以考虑使用分片加载的策略**
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
