@@ -65,13 +65,13 @@ startActivityForResult 也很简单，调用 Instrumentation.execStartActivity �
 
 接下来就从 AMS 的 startActivity 方法开始看起：
 
-##AMS 的 startActivity
+## AMS 的 startActivity
 
 [![AMS 的 startActivity.png](https://z3.ax1x.com/2021/08/14/f6eG1s.png)](https://imgtu.com/i/f6eG1s)
 
 从上图可以看出，经过多个方法的调用，最终通过 obtainStarter 方法获取了 ActivityStarter 类型的对象，然后调用其 execute 方法。在 execute 方法中，会再次调用其内部的 startActivityMayWait 方法。
 
-##ActivityStarter 的 startActivityMayWait
+## ActivityStarter 的 startActivityMayWait
 
 ActivityStarter 这个类看名字就知道它专门负责一个 Activity 的启动操作。它的主要作用包括解析 Intent、创建 ActivityRecord、如果有可能还要创建 TaskRecord。startActivityMayWait 方法的部分实现如下：
 
@@ -81,7 +81,7 @@ ActivityStarter 这个类看名字就知道它专门负责一个 Activity 的启
 
 ***在上图中的 resolveIntent 中实际上是调用系统 PackageManagerService 来获取最佳 Activity。有时候我们通过隐式 Intent 启动 Activity 时，系统中可能存在多个 Activity 可以处理 Intent，此时会弹出一个选择框让用户选择具体需要打开哪一个 Activity 界面，就是此处的逻辑处理结果。***
 
-##ActivityStarter 的 startActivityUnchecked
+## ActivityStarter 的 startActivityUnchecked
 
 [![ActivityStarter 的 startActivityUnchecked01.png](https://z3.ax1x.com/2021/08/14/f6KhqI.png)](https://imgtu.com/i/f6KhqI)
 
@@ -93,7 +93,7 @@ ActivityStarter 这个类看名字就知道它专门负责一个 Activity 的启
 
 + **注释 3 处启动栈中顶部的 Activity。**
 
-####computeLaunchingTaskFlags 方法具体如下：
+#### computeLaunchingTaskFlags 方法具体如下：
 
 [![computeLaunchingTaskFlags01.png](https://z3.ax1x.com/2021/08/14/f6MIX9.png)](https://imgtu.com/i/f6MIX9)
 
@@ -107,7 +107,7 @@ ActivityStarter 这个类看名字就知道它专门负责一个 Activity 的启
 
 + **图中 4 处表示如果 Launch Mode 设置了 singleTask 或 singleInstance，则也要创建一个新栈。**
 
-####ActivityStackSupervisor 的 startActivityLocked
+#### ActivityStackSupervisor 的 startActivityLocked
 
 [![ActivityStackSupervisor 的 startActivityLocked01.png](https://z3.ax1x.com/2021/08/14/f61OhV.png)](https://imgtu.com/i/f61OhV)
 
@@ -119,13 +119,13 @@ ActivityStarter 这个类看名字就知道它专门负责一个 Activity 的启
 
 关于它们之间实际操作过程可以参考 [Android 8.0 Activity启动流程](https://mp.weixin.qq.com/s/Z14PtsmQXgIuTrbC6VVLiw) 这篇文章，不过需要注意这篇文章中分析的是基于 android-27 版本。
 
-####ActivityStack 的 resumeFocusedStackTopActivityLocked
+#### ActivityStack 的 resumeFocusedStackTopActivityLocked
 
 [![ActivityStack 的 resumeFocusedStackTopActivityLocked01.png](https://z3.ax1x.com/2021/08/14/f63v5t.png)](https://imgtu.com/i/f63v5t)
 
 经过一系列调用，最终代码又回到了 ActivityStackSupervisor 中的 startSpecificActivityLocked 方法。
 
-####ActivityStackSupervisor 的 startSpecificActivityLocked
+#### ActivityStackSupervisor 的 startSpecificActivityLocked
 
 [![ActivityStackSupervisor 的 startSpecificActivityLocked.png](https://z3.ax1x.com/2021/08/14/f68n2T.png)](https://imgtu.com/i/f68n2T)
 
@@ -136,7 +136,7 @@ ActivityStarter 这个类看名字就知道它专门负责一个 Activity 的启
 
 不管是目标进程已经存在还是新建目标进程，最终都会调用图中红线标记的 realStartActivityLocked 方法来执行启动 Activity 的操作。
 
-####ActivityStackSupervisor 的 realStartActivityLocked
+#### ActivityStackSupervisor 的 realStartActivityLocked
 
 [![ActivityStackSupervisor 的 realStartActivityLocked01.png](https://z3.ax1x.com/2021/08/14/f6GCJx.png)](https://imgtu.com/i/f6GCJx)
 
