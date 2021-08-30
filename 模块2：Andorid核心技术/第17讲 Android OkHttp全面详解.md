@@ -65,7 +65,9 @@ Dispatcher的enqueue 方法的具体实现如下：
 
 [![CacheInterceptor_01.png](https://z3.ax1x.com/2021/08/13/frxehD.png)](https://imgtu.com/i/frxehD)
 
-**b. 通过 CacheStrategy 判断当前缓存中的 Response 是否有效（比如是否过期），如果缓存 Response 可用则直接返回，否则调用 chain.proceed() 继续执行下一个拦截器，也就是发送网络请求从服务器获取远端 Response。**具体如下：
+**b. 通过 CacheStrategy 判断当前缓存中的 Response 是否有效（比如是否过期），如果缓存 Response 可用则直接返回，否则调用 chain.proceed() 继续执行下一个拦截器，也就是发送网络请求从服务器获取远端 Response。**
+
+具体如下：
 
 [![CacheInterceptor_02.png](https://z3.ax1x.com/2021/08/13/frx3HP.png)](https://imgtu.com/i/frx3HP)
 
@@ -143,96 +145,3 @@ getProgressBarClient 通过添加一个拦截器，并且在 intercept 方法中
 + **然后在网络请求阶段通过责任链模式，链式的调用各个拦截器的 intercept 方法。其中我重点介绍了 2 个比较重要的拦截器：CacheInterceptor 和 CallServerInterceptor。它们分别用来做请求缓存和执行网络请求操作。**
 
 + **最后我们在理解源码实现的基础上，对 OkHttp 的功能进行了一些扩展，实现了网络请求进度的实现。**
- 
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
