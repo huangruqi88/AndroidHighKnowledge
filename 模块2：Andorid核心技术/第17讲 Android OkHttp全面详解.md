@@ -73,6 +73,8 @@ Dispatcher的enqueue 方法的具体实现如下：
 
 **c. 如果从服务器端成功获取 Response，再判断是否将此 Response 进行缓存操作。**
 
+[![CacheInterceptor_03.png](https://z3.ax1x.com/2021/08/13/fsS4k6.png)](https://imgtu.com/i/fsS4k6)
+
 #### 通过 Cache 实现缓存功能
 
 通过上面分析缓存拦截器的流程可以看出，OkHttp 只是规范了一套缓存策略，但是具体使用何种方式将数据缓存到本地，以及如何从本地缓存中取出数据，都是由开发人员自己定义并实现，并通过 OkHttpClient.Builder 的 cache 方法设置。
