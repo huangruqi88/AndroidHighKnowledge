@@ -145,7 +145,7 @@ nativePollOnce 方法是一个 native 方法，当调用此 native 方法时，�
 
 **注意:** *在上述代码中也能看出，如果当前系统时间大于或等于 Message.when，那么会返回 Message 给 Looper.loop()。但是这个逻辑只能保证在 when 之前消息不被处理，不能够保证一定在 when 时被处理。*
 
-##总结
+## 总结
 
 + **应用启动是从 ActivityThread 的 main 开始的，先是执行了 Looper.prepare()，该方法先是 new 了一个 Looper 对象，在私有的构造方法中又创建了 MessageQueue 作为此 Looper 对象的成员变量，Looper 对象通过 ThreadLocal 绑定 MainThread 中；**
 + **当我们创建 Handler 子类对象时，在构造方法中通过 ThreadLocal 获取绑定的 Looper 对象，并获取此 Looper 对象的成员变量 MessageQueue 作为该 Handler 对象的成员变量；**
