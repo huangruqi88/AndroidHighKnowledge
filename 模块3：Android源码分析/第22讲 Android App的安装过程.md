@@ -24,7 +24,7 @@ resources.arsc 相当于一个资源索引表，也可以理解为一个 map �
 
 ***实际上源代码文件也包括 AIDL 接口文件编译之后生成的 .java 文件，Android 项目中如果包含 .aidl 接口文件，这些 .aidl 文件会被编译成 .java 文件。***
 
-#### 打包阶段
+## 打包阶段
 
 最后使用工具 APK Builder 将经过编译之后的 resource 和 .dex 文件一起打包到 apk 中，实际上被打包到 apk 中的还有一些其他资源，比如 AndroidManifest.xml 清单文件和三方库中使用的动态库 .so 文件。
 
