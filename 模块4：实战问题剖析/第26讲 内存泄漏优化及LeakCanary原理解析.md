@@ -2,13 +2,13 @@
 
 内存泄漏是一个隐形炸弹，其本身并不会造成程序异常，但是随着量的增长会导致其他各种并发症：OOM，UI 卡顿等。
 
-##Activity 内存泄漏预防
+## Activity 内存泄漏预防
 
 为什么要单独将 Activity 单独做预防，是因为 Activity 承担了与用户交互的职责，因此内部需要持有大量的资源引用以及与系统交互的 Context，这会导致一个 Activity 对象的 retained size 特别大。一旦 Activity 因为被外部系统所持有而导致发生内存泄漏，被牵连导致其他对象的内存泄漏也会非常多。
 
 造成 Activity 内存泄漏的场景主要有以下几种情况。
 
-###1. 将 Context 或者 View 置为 static
+### 1. 将 Context 或者 View 置为 static
 
 View 默认会持有一个 Context 的引用，如果将其置为 static 将会造成 View 在方法区中无法被快速回收，最终导致 Activity 内存泄漏。
 
@@ -16,7 +16,7 @@ View 默认会持有一个 Context 的引用，如果将其置为 static 将会�
 
 图中的 imageView 会造成 ActivityB 无法被 GC 回收。
 
-###2. 未解注册各种 Listener
+### 2. 未解注册各种 Listener
 
 在 Activity 中可能会注册各种系统监听器，比如广播。
 
@@ -26,7 +26,7 @@ View 默认会持有一个 Context 的引用，如果将其置为 static 将会�
 
 [![2. 未解注册各种 Listener01.2.png](https://z3.ax1x.com/2021/08/19/fHUmfs.png)](https://imgtu.com/i/fHUmfs)
 
-###3. 非静态 Handler 导致 Activity 泄漏
+### 3. 非静态 Handler 导致 Activity 泄漏
 
 [![3. 非静态 Handler 导致 Activity 泄漏01.png](https://z3.ax1x.com/2021/08/19/fHUYtJ.png)](https://imgtu.com/i/fHUYtJ)
 
@@ -34,7 +34,7 @@ View 默认会持有一个 Context 的引用，如果将其置为 static 将会�
 
 [![3. 非静态 Handler 导致 Activity 泄漏02.png](https://z3.ax1x.com/2021/08/19/fHUr7D.png)](https://imgtu.com/i/fHUr7D)
 
-###4. 三方库使用 Context
+### 4. 三方库使用 Context
 
 在项目中经常会使用各种三方库，有些三方库的初始化需要我们传入一个 Context 对象。但是三方库中很有可能一直持有此 Context 引用，比如以下代码：
 
@@ -48,7 +48,7 @@ View 默认会持有一个 Context 的引用，如果将其置为 static 将会�
 
 虽然是经过混淆之后的代码，但是也能大概猜出 checkContext 方法内部会使用 context.getApplicationContext 给内部 Context 赋值，因此即使我们传给 JPush 的是 Activity，也不会造成 Activity 泄漏。
 
-##内存泄漏检测
+## 内存泄漏检测
 
 在开发阶段安卓工程师可以直接使用 Android Studio 来查看 Activity 是否存在内存泄漏，并结合 MAT 来查看发生内存泄漏的具体对象。这部分内容相信大多数安卓工程师都信手拈来，这节内容不展开详细介绍，详细使用过程可以参考：[Android Studio和MAT结合使用来分析内存问题。](https://blog.csdn.net/zxm317122667/article/details/52162764)
 
@@ -61,9 +61,9 @@ LeakCanary 主要分 2 大核心部分：
 1. **如何检测内存泄漏；**
 2. **分析内存泄漏对象的引用链。**
 
-###如何检测内存泄漏
+### 如何检测内存泄漏
 
-####JVM 理论知识
+#### JVM 理论知识
 
 Java 中的 WeakReference 是弱引用类型，每当发生 GC 时，它所持有的对象如果没有被其他强引用所持有，那么它所引用的对象就会被回收。比如以下代码：
 
@@ -89,7 +89,7 @@ WeakReference 的构造函数可以传入 ReferenceQueue，当 WeakReference 指
 可以看出，当 BigObject 被回收之后，WeakReference 会被添加到所传入的 ReferenceQueue 中。
 再修改一下上述代码，模拟一个内存泄漏，如下所示：
 
-###实现思路
+### 实现思路
 
 LeakCanary 中对内存泄漏检测的核心原理就是基于 WeakReference 和 ReferenceQueue 实现的。
 
@@ -99,11 +99,11 @@ LeakCanary 中对内存泄漏检测的核心原理就是基于 WeakReference 和
 
 **经过上面 3 步之后，还保留在 Set 中的就是：应当被 GC 回收，但是实际还保留在内存中的对象，也就是发生泄漏了的对象。**
 
-###源码分析
+### 源码分析
 
 在上面原理介绍的例子里，我们知道一个可回收对象在 System.gc() 之后就应该被 GC 回收。可是在 Android App 中，我们并不清楚何时系统会回收 Activity。但是，按照正常流程，当 Activity 调用 onDestroy 方法时就说明这个 Activity 就已经处于无用状态了。因此我们需要监听到每一个 Activity 的 onDestroy 方法的调用。
 
-####ActivityRefWatch
+#### ActivityRefWatch
 
 LeakCanary 中监听 Activity 生命周期是由 ActivityRefWatch 来负责的，主要是通过注册 Android 系统提供的 ActivityLifecycleCallbacks，来监听 Activity 的生命周期方法的调用，如下所示：
 
@@ -115,7 +115,7 @@ lifecycleCallbacks 的具体代码如下：
 
 可以看出当监听到 Activity 的 onDestroy 方法后，会将其传给 RefWatcher 的 watch 方法。
 
-####RefWatcher
+#### RefWatcher
 
 它是 LeakCanary 的一个核心类，用来检测一个对象是否会发生内存泄漏。主要实现是在 watch 方法中，如下所示：
 
@@ -159,7 +159,7 @@ gone(reference) 方法判断 reference 是否被回收了，如下：
 
 LeakCanary 的实现原理其实比较简单，但是内部实现还有一些其他的细节值得我们注意。
 
-####内存泄漏的检测时机
+#### 内存泄漏的检测时机
 
 很显然这种内存泄漏的检测与分析是比较消耗性能的，因此为了尽量不影响 UI 线程的渲染，LeakCanary 也做了些优化操作。在 ensureGoneAsync 方法中调用了 WatchExecutor 的 execute 方法来执行检测操作，如下：
 
@@ -169,7 +169,7 @@ LeakCanary 的实现原理其实比较简单，但是内部实现还有一些其
 
 ***通过 addIdleHandler 也经常用来做 App 的启动优化，比如在 Application 的 onCreate 方法中经常做 3 方库的初始化工作。可以将优先级较低、暂时使用不到的 3 方库的初始化操作放到 IdleHandler 中，从而加快 Application 的启动过程。不过个人感觉方法名叫 addIdleMessage 更合适一些，因为向 MessageQueue 插入的都是 Message 对象。***
 
-####特殊机型适配
+#### 特殊机型适配
 
 因为有些特殊机型的系统本身就存在一些内存泄漏的情况，导致 Activity 不被回收，所以在检测内存泄漏时，需要将这些情况排除在外。在 LeakCanary 的初始化方法 install 中，通过 excludedRefs 方法指定了一系列需要忽略的场景。
 
@@ -177,7 +177,7 @@ LeakCanary 的实现原理其实比较简单，但是内部实现还有一些其
 
 这些场景都被枚举在 AndroidExcludedRefs 中，这种统一规避特殊机型的方式，也值得我们借鉴，因为国内的手机厂商实在是太多了。
 
-####LeakCanary 如何检测其他类
+#### LeakCanary 如何检测其他类
 
 LeakCanary 默认只能机检测 Activity 的泄漏，但是 RefWatcher 的 watch 方法传入的参数实际是 Object，所以理论上是可以检测任何类的。LeakCanary 的 install 方法会返回一个 RefWatcher 对象，我们只需要在 Application 中保存此 RefWatch 对象，然后将需要被检测的对象传给 watch 方法即可，具体如下所示：
 
@@ -185,7 +185,7 @@ LeakCanary 默认只能机检测 Activity 的泄漏，但是 RefWatcher 的 watc
 
 testedObj 就是一个需要被检测内存泄漏的对象。
 
-##总结
+## 总结
 
 这节课主要介绍了 Android 内存泄漏优化的相关知识。主要分两部分：
 
@@ -196,64 +196,3 @@ testedObj 就是一个需要被检测内存泄漏的对象。
 + 内存泄漏检测
 
 内存泄漏检测工具有很多 Android Studio 自带的 Profiler，以及 MAT 都是不错的选择。但是相比较而言，使用这些工具排查内存泄漏门槛稍高，并且全部是手动操作，略显麻烦。除了这两个工具之外，我还介绍了一个自动检测内存泄漏的开源库—LeakCanary。主要包括它的实现原理以及部分源码实现细节。
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
