@@ -25,7 +25,7 @@ ConstraintLayout 还有几个其他特殊属性，通过它们可以帮助我们
 
 ConstraintLayout 提供了水平和垂直方向的 bias 属性，这个属性的取值范围是 0~1。主要作用是确立 View 在水平方向或者垂直方向的位置百分比。比如以下示例代码：
 
-[![Bias01.png](https://z3.ax1x.com/2021/08/23/hPS3JP.png)](https://imgtu.com/i/hPS3JP)
+[![Bias01.png](https://z3.ax1x.com/2021/09/03/h6TMSf.png)](https://imgtu.com/i/h6TMSf)
 
 图中的 horizontal_bias 和 vertical_bias 分别指定 TextView 显示在水平方向的 30% 位置和垂直方向上 50% 的位置，最终显示效果如下：
 
@@ -115,81 +115,3 @@ ConstraintLayout 还提供了 chain 属性来设置不同的均分策略，具�
 + **使用 ConstraintLayout 能够完美实现布局内部控件之间的约束条件，并且能够代替 LinearLayout 和 RelativeLayout 等布局。**
 + **在 ConstraintLayout 基础上，再加上多 dimens 适配方案基本就能实现所有的屏幕适配。**
 + **最后对于特殊 UI 控件的适配再做针对性适配即可，主要介绍了 TextVIew 和 ImageView 的几个适配技巧。**
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
