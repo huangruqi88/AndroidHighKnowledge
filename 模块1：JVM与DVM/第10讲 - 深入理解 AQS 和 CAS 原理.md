@@ -2,7 +2,7 @@
 
 AQS 全称是 Abstract Queued Synchronizer，一般翻译为同步器。它是一套实现多线程同步功能的框架，由大名鼎鼎的 Doug Lea 操刀设计并开发实现的。AQS 在源码中被广泛使用，尤其是在 JUC（Java Util Concurrent）中，比如 ReentrantLock、Semaphore、CountDownLatch、ThreadPoolExecutor。理解 AQS 对我们理解 JUC 中其他组件至关重要，并且在实际开发中也可以通过自定义 AQS 来实现各种需求场景。
 
-**注意：**理解 AQS 需要一定的数据结构基础，尤其是双端队列，并对 Unsafe 有一定的了解。
+**注意**：理解 AQS 需要一定的数据结构基础，尤其是双端队列，并对 Unsafe 有一定的了解。
 
 ## ReentrantLock 和 AQS 的关系
 
