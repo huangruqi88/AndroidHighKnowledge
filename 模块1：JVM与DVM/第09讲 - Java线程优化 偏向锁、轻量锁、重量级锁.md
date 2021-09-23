@@ -72,7 +72,7 @@ Monitor 可以把它理解为一个同步工具，也可以描述为一种同步
 
 [![实例演示03.png](https://z3.ax1x.com/2021/08/03/fiUcEq.png)](https://imgtu.com/i/fiUcEq)
 
-假设线程 2 首先通过竞争获取到了锁对象，则 ObjectMonitor 中的 Owner 指向线程 2，并将 count 加 1。结果如下：3333
+假设线程 2 首先通过竞争获取到了锁对象，则 ObjectMonitor 中的 Owner 指向线程 2，并将 count 加 1。结果如下：
 
 [![实例演示04.png](https://z3.ax1x.com/2021/08/28/hlTFW4.png)](https://imgtu.com/i/hlTFW4)
 
