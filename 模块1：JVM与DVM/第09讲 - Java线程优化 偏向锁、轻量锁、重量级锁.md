@@ -79,7 +79,7 @@ Monitor 可以把它理解为一个同步工具，也可以描述为一种同步
 上图中 Owner 指向线程 2 表示它已经成功获取到锁（Monitor）对象，其他线程只能处于阻塞（blocking）状态。如果线程 2 在执行过程中调用 wait() 操作，则线程 2 会释放锁（Monitor）对象，以便其他线程进入获取锁（Monitor）对象，Owner 变量恢复为 null，count 做减 1 操作，同时线程 2 会添加到 WaitSet 集合，进入等待（waiting）状态并等待被唤醒。结果如下：
 
 [![实例演示04.gif](https://z3.ax1x.com/2021/08/03/fidZY6.gif)](https://imgtu.com/i/fidZY6)
-
+[![实例演.gif](https://z3.ax1x.com/2021/08/15/fgQgb9.gif)](https://imgse.com/i/fgQgb9)
 然后线程 1 和线程 3 再次通过竞争获取到锁（Monitor）对象，则重新将 Owner 指向成功获取到锁的线程。假设线程 1 获取到锁，如下：
 
 [![实例演示05.png](https://z3.ax1x.com/2021/08/03/fidb9K.png)](https://imgtu.com/i/fidb9K)
